@@ -70,35 +70,35 @@ def get_price_history(interval, crypto):
 
 if __name__ == "__main__":
     # fonctionnement normal
-    print(get_crypto())
-    # cryptos = get_crypto()
-    # conn = sql.connect("cryptoDatabase.db")
-    # curs = conn.cursor()
-    # curs.execute("DROP TABLE IF EXISTS Crypto")
-    # curs.execute(
-    #     "CREATE TABLE  Crypto (nom VARCHAR, symbol VARCHAR PRIMARY KEY, whitepaperlink VARCHAR)")
-    # curs.execute("DROP TABLE IF EXISTS Prix")
-    # curs.execute(
-    #     "CREATE TABLE  Prix (symbol VARCHAR, date VARCHAR, open FLOAT, high FLOAT, low FLOAT, close FLOAT,PRIMARY KEY (symbol, date),FOREIGN KEY (symbol) REFERENCES Crypto(symbol))")
-    # cryptoCurrencies = []
-    # for crypto in cryptos:
-    #     cryptoCurrencies += [CryptoCurrency.Cryptocurrency(crypto)]
-    # for crypto in cryptoCurrencies:
-    #     infos = crypto.get_name_and_whitepaperlink()
-    #     # l'interval choisi ici est hebdomadaire si on veut plus de précision, on peut prendre un plus petit interval
-    #     price_history = get_price_history(
-    #         "W", crypto)
-    #     curs.execute("INSERT INTO Crypto(nom,symbol,whitepaperlink) VALUES (?,?,?)",
-    #                  (infos["name"], crypto.symbol, infos["whitepaperLink"]))
-    #     conn.commit()
-    #     for prices in price_history:
-    #         timestamps = list(prices.keys())
-    #         for date in timestamps:
-    #             curs.execute("INSERT INTO Prix(symbol,date,open,high,low,close) VALUES (?,?,?,?,?,?)",
-    #                          (crypto.symbol, datetime.fromtimestamp(int(date)/1000), prices[date]["open"], prices[date]["high"], prices[date]["low"], prices[date]["close"]))
-    #             conn.commit()
-    # conn.commit()
-    # conn.close()
+    # print(get_crypto())
+    cryptos = get_crypto()
+    conn = sql.connect("cryptoDatabase.db")
+    curs = conn.cursor()
+    curs.execute("DROP TABLE IF EXISTS Crypto")
+    curs.execute(
+        "CREATE TABLE  Crypto (nom VARCHAR, symbol VARCHAR PRIMARY KEY, whitepaperlink VARCHAR)")
+    curs.execute("DROP TABLE IF EXISTS Prix")
+    curs.execute(
+        "CREATE TABLE  Prix (symbol VARCHAR, date VARCHAR, open FLOAT, high FLOAT, low FLOAT, close FLOAT,PRIMARY KEY (symbol, date),FOREIGN KEY (symbol) REFERENCES Crypto(symbol))")
+    cryptoCurrencies = []
+    for crypto in cryptos:
+        cryptoCurrencies += [CryptoCurrency.Cryptocurrency(crypto)]
+    for crypto in cryptoCurrencies:
+        infos = crypto.get_name_and_whitepaperlink()
+        # l'interval choisi ici est hebdomadaire si on veut plus de précision, on peut prendre un plus petit interval
+        price_history = get_price_history(
+            "W", crypto)
+        curs.execute("INSERT INTO Crypto(nom,symbol,whitepaperlink) VALUES (?,?,?)",
+                     (infos["name"], crypto.symbol, infos["whitepaperLink"]))
+        conn.commit()
+        for prices in price_history:
+            timestamps = list(prices.keys())
+            for date in timestamps:
+                curs.execute("INSERT INTO Prix(symbol,date,open,high,low,close) VALUES (?,?,?,?,?,?)",
+                             (crypto.symbol, datetime.fromtimestamp(int(date)/1000), prices[date]["open"], prices[date]["high"], prices[date]["low"], prices[date]["close"]))
+                conn.commit()
+    conn.commit()
+    conn.close()
 
     # test
 
